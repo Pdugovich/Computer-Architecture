@@ -1,0 +1,45 @@
+The repo contains two main folders, an faq, a cheatcheet, the spec, and a main readme
+
+Doing a depth first search on the repo starting from the readme
+
+
+
+- README.md (main folder)
+Contains mvps for each day 
+
+
+LS8-spec.md
+Description of each instruction. How the code should work on a more
+granular level
+
+LS8-cheatsheet.md
+Not 100% sure yet. I see operations, followed by binary, followed by 
+two rows of hex for the first thing labeled ALU ops.
+Maybe operation, place in memory, and... not sure about the hex
+
+FAQ.md
+faq about computers and emulators. Some questions specifically about the project
+
+.gitignore
+git-ignore it :awesome:
+
+
+-----ls8-----
+README.md
+An outline of implimenting the 8 bit emulator. It is split into steps, but not
+by day. The split by day is in the main readme for the repo
+
+ls8.py
+Looks like this is where we're going to be running everything from
+
+cpu.py
+the code for our cpu. This should contain everything necessary to run our
+emulator from. This is our 'piano'
+
+-examples- (subfolder)
+These 9 files contain the programs to be run with our cpu.
+These are the 'scrolls with holes in them'. I need to remember what those are called.
+Pop used to have a ton of them for playing ragtime music.
+
+-----asm-----
+Alright, a lot of node.js stuff in this folder. Not eeeeeven going to touch this
