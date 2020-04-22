@@ -14,20 +14,24 @@ class CPU:
 		self.ram = [0] * 256
 		# Probably a program counter also
 		self.pc = 0
+		# Identifying reg[6] as the pointer for the stack
+		# the stack starts at 243
+		self.reg[6] = 243
+		# Setting 
 		# Setting running up here so I can mess with it in methods
 		self.running = False
 		self.operations = {
 			# # ALU ops
-			# 0b10100000: self.ADD,
+			0b10100000: self.ADD,
 			0b10100001: self.SUB,
 			0b10100010: self.MUL,
-			# 0b10100011: self.DIV,
-			# 0b10100100: self.MOD,
+			0b10100011: self.DIV,
+			0b10100100: self.MOD,
 
-			# 0b01100101: self.INC, 
-			# 0b01100110: self.DEC,
+			0b01100101: self.INC, 
+			0b01100110: self.DEC,
 
-			# 0b10100111: self.CMP,
+			0b10100111: self.CMP,
 
 			# 0b10101000: self.AND,
 			# 0b01101001: self.NOT,
@@ -61,24 +65,16 @@ class CPU:
 			# 0b10000011: self.LD,
 			# 0b10000100: self.ST,
 
-			# 0b01000101: self.PUSH,
-			# 0b01000110: self.POP,
+			0b01000101: self.PUSH,
+			0b01000110: self.POP,
 
 			0b01000111: self.PRN,
 			#0b01001000: self.PRA
 		}
 	
-	# Halts the program
-	def HLT(self, operand_a, operand_b):
-		self.running = False
-
-	# sets a register to a specific value
-	def LDI(self, operand_a, operand_b):
-		self.reg[operand_a] = operand_b
-	
-	# Print a value at a register
-	def PRN(self, operand_a, operand_b):
-		print(self.reg[operand_a])
+	# adds two registers together, then saves to a
+	def ADD(self, operand_a, operand_b):
+		self.reg[operand_a] += self.reg[operand_b]
 	
 	# Subtracts reg b from a, then saves to a
 	def SUB(self, operand_a, operand_b):
@@ -87,6 +83,70 @@ class CPU:
 	# Multiply two registers together and set register a to the result
 	def MUL(self, operand_a, operand_b):
 		self.reg[operand_a] *= self.reg[operand_b]
+	
+	# Divide a by b, storing in A
+	# if b is 0, print error and halt
+	def DIV(self, operand_a, operand_b):
+		if self.reg[operand_b] != 0:
+			self.reg[operand_a] = self.reg[operand_a] / self.reg[operand_b]
+		elif self.reg[operand_b] == 0:
+			print("ERROR: Cannot divide by 0.")
+			self.HLT(operand_a, operand_b)
+
+
+	# Divide op_a by op_b, then store remainder in reg_a
+	# if value in reg_b is 0, print error and halt
+	def MOD(self, operand_a, operand_b):
+		if self.reg[operand_b] != 0:
+			self.reg[operand_a] = self.reg[operand_a] % self.reg[operand_b]
+		elif self.reg[operand_b] == 0:
+			print("ERROR: Cannot divide by 0.")
+			self.HLT(operand_a, operand_b)
+	
+	# Increment a register by 1
+	def INC(self, operand_a, operand_b):
+		self.reg[operand_a] += 1
+
+	# Decrement a register by 1
+	def DEC(self, operand_a, operand_b):
+		self.reg[operand_a] -= 1
+
+	#
+	def CMP(self, operand_a, operand_b):
+		"""
+		Compare the values in two registers.
+
+		If they are equal, set the Equal E flag to 1, otherwise set it to 0.
+
+		If registerA is less than registerB, set the Less-than L flag to 1, otherwise set it to 0.
+
+		If registerA is greater than registerB, set the Greater-than G flag to 1, otherwise set it to 0.
+		"""
+
+
+	# Halts the program
+	def HLT(self, operand_a, operand_b):
+		self.running = False
+
+	# sets a register to a specific value
+	def LDI(self, operand_a, operand_b):
+		self.reg[operand_a] = operand_b
+
+	
+	def PUSH(self, operand_a, operand_b):
+		self.reg[6] -= 1
+		self.ram[self.reg[6]] = self.reg[operand_a]
+
+	def POP(self, operand_a, operand_b):
+		self.reg[operand_a] = self.ram[self.reg[6]]
+		if self.reg[6] <= 242:
+			self.reg[6] +=1
+		else:
+			self.reg[6] = 243
+	
+	# Print a value at a register
+	def PRN(self, operand_a, operand_b):
+		print(self.reg[operand_a])
 
 	
 
